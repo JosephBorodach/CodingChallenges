@@ -12,11 +12,28 @@ package src.main.leatcode;
  * Given an integer, convert it to a roman numeral.
  *
  * Solutions:
- * 1) I went with the least clean solution, however it was not slower
+ * 1) I went with the least clean solution, however it was not slower than MOST solutions
  * 2) Use arrays - this would have been just as quick as if statements
  * 3) Using a Map seemed unecessarily slow
+ *
  */
 public class RomanNumerals {
+    // time = O(1), space = O(1)
+    // This is impressive
+    public static String fastestIntToRoman(int num) {
+        int[] values = new int[]{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] strs = new String[]{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            while (num >= values[i]) {
+                num -= values[i];
+                sb.append(strs[i]);
+            }
+        }
+        return sb.toString();
+    }
+
     public static String intToRoman(int num) {
         // It seems like there are 2 different scenarious
         // 1) Even numbers, where there is no subtraction
@@ -132,6 +149,7 @@ public class RomanNumerals {
         //prints roman numerals from 1 to 200
         for (int i = 1;i<256;i++) {
             System.out.println("i="+i+" -> "+ intToRoman(i));
+            System.out.println("i="+i+" -> "+ fastestIntToRoman(i));
         }
     }
 }
