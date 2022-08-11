@@ -10,6 +10,11 @@ package src.main.leatcode;
  * X can be placed before L (50) and C (100) to make 40 and 90.
  * C can be placed before D (500) and M (1000) to make 400 and 900.
  * Given an integer, convert it to a roman numeral.
+ *
+ * Solutions:
+ * 1) I went with the least clean solution, however it was not slower
+ * 2) Use arrays - this would have been just as quick as if statements
+ * 3) Using a Map seemed unecessarily slow
  */
 public class RomanNumerals {
     public String intToRoman(int num) {
@@ -17,24 +22,30 @@ public class RomanNumerals {
         // 1) Even numbers, where there is no subtraction
         // 2) Odd numbers, where there is subtraction
         // Deal with each value seperateley
+        // Rememeber - substring goes until the end index, but does not include it
         String returnString = "";
         String strNum = String.valueOf(num);
-        for (int i = 0; i < strNum.length(); i++) {
-            if (i == 3) {
-                returnString += thousands(strNum);
-            } else if (i == 2) {
-                returnString += hundreds(strNum);
-            } else if (i == 1) {
-                returnString += tens(strNum);
-            } else {
-                returnString += ones(strNum);
-            }
+        Integer strLength = strNum.length();
+        if (strLength >= 4) {
+            returnString += thousands(strNum);
+            strNum = strNum.substring(1, 4);
+        }
+        if (strLength >= 3) {
+            returnString += hundreds(strNum);
+            strNum = strNum.substring(1, 3);
+        }
+        if (strLength >= 2) {
+            returnString += tens(strNum);
+            strNum = strNum.substring(1, 2);
+        }
+        if (strLength >= 1) {
+            returnString += ones(strNum);
         }
         return returnString;
     }
 
     private String thousands(String strNum) {
-        String n = String.valueOf(strNum.charAt(3));
+        String n = String.valueOf(strNum.charAt(0));
         if (n.equals("1")) {
             return "M";
         } else if (n.equals("2")) {
@@ -44,7 +55,7 @@ public class RomanNumerals {
     }
 
     private String hundreds(String strNum) {
-        String n = String.valueOf(strNum.charAt(2));
+        String n = String.valueOf(strNum.charAt(0));
         if (n.equals("9")) {
             return "CM";
         } else if (n.equals("5")) {
@@ -60,24 +71,26 @@ public class RomanNumerals {
     }
 
     private String tens(String strNum) {
-        String n = String.valueOf(strNum.charAt(1));
+        String n = String.valueOf(strNum.charAt(0));
         if (n.equals("9")) {
             return "XC";
         } else if (n.equals("5")) {
-            return "V";
+            return "L";
         } else if (n.equals("4")) {
-            return "IV";
+            return "XL";
         } else if (n.equals("3")) {
-            return "III";
+            return "XXX";
         } else if (n.equals("2")) {
-            return "II";
+            return "XX";
         }
-        return "I";
+        return "X";
     }
 
     private String ones(String strNum) {
         String n = String.valueOf(strNum.charAt(0));
-        if (n.equals("5")) {
+        if (n.equals("8")) {
+            return "VIII";
+        } else if (n.equals("5")) {
             return "V";
         } else if (n.equals("4")) {
             return "IV";
