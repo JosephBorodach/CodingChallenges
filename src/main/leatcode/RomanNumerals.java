@@ -17,7 +17,7 @@ package src.main.leatcode;
  * 3) Using a Map seemed unecessarily slow
  */
 public class RomanNumerals {
-    public String intToRoman(int num) {
+    public static String intToRoman(int num) {
         // It seems like there are 2 different scenarious
         // 1) Even numbers, where there is no subtraction
         // 2) Odd numbers, where there is subtraction
@@ -44,20 +44,28 @@ public class RomanNumerals {
         return returnString;
     }
 
-    private String thousands(String strNum) {
+    private static String thousands(String strNum) {
         String n = String.valueOf(strNum.charAt(0));
-        if (n.equals("1")) {
-            return "M";
+        if (n.equals("3")) {
+            return "MMM";
         } else if (n.equals("2")) {
             return "MM";
+        } else if (n.equals("1")) {
+            return "M";
         }
-        return "MMM";
+        return "";
     }
 
-    private String hundreds(String strNum) {
+    private static String hundreds(String strNum) {
         String n = String.valueOf(strNum.charAt(0));
         if (n.equals("9")) {
             return "CM";
+        } else if (n.equals("8")) {
+            return "DCCC";
+        } else if (n.equals("7")) {
+            return "DCC";
+        } else if (n.equals("6")) {
+            return "DC";
         } else if (n.equals("5")) {
             return "D";
         } else if (n.equals("4")) {
@@ -66,14 +74,22 @@ public class RomanNumerals {
             return "CCC";
         } else if (n.equals("2")) {
             return "CC";
+        } else if (n.equals("1")) {
+            return "C";
         }
-        return "C";
+        return "";
     }
 
-    private String tens(String strNum) {
+    private static String tens(String strNum) {
         String n = String.valueOf(strNum.charAt(0));
         if (n.equals("9")) {
             return "XC";
+        } else if (n.equals("8")) {
+            return "LXXX";
+        } else if (n.equals("7")) {
+            return "LXX";
+        } else if (n.equals("6")) {
+            return "LX";
         } else if (n.equals("5")) {
             return "L";
         } else if (n.equals("4")) {
@@ -82,14 +98,22 @@ public class RomanNumerals {
             return "XXX";
         } else if (n.equals("2")) {
             return "XX";
+        } else if (n.equals("1")) {
+            return "X";
         }
-        return "X";
+        return "";
     }
 
-    private String ones(String strNum) {
+    private static String ones(String strNum) {
         String n = String.valueOf(strNum.charAt(0));
-        if (n.equals("8")) {
+        if (n.equals("9")) {
+            return "IX";
+        } else if (n.equals("8")) {
             return "VIII";
+        } else if (n.equals("7")) {
+            return "VII";
+        } else if (n.equals("6")) {
+            return "VI";
         } else if (n.equals("5")) {
             return "V";
         } else if (n.equals("4")) {
@@ -98,7 +122,16 @@ public class RomanNumerals {
             return "III";
         } else if (n.equals("2")) {
             return "II";
+        } else if (n.equals("1")) {
+            return "I";
         }
-        return "I";
+        return "";
+    }
+
+    public static void main(String args[]) {
+        //prints roman numerals from 1 to 200
+        for (int i = 1;i<256;i++) {
+            System.out.println("i="+i+" -> "+ intToRoman(i));
+        }
     }
 }
