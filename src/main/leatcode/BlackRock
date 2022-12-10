@@ -1,0 +1,174 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * The Main class implements an application that reads lines from the standard input
+ * and prints them to the standard output.
+ */
+public class Main {
+  static boolean open_curly;
+  static boolean company_name;
+  static boolean ticker;
+  static boolean stockPrice;
+  static boolean close_curly;
+  
+  static String line;
+  static int length;
+  static int i;
+  /**
+   * Iterate through each line of input.
+   * 1) Use an iteration based system - using while and for loops 
+   * 2) Use recursion - this would have been more organized and neat but it's not necessary
+   * 3) Use a contains system - this is too complicated to do off hand, but likely is the better and faster approach
+   * 
+   */
+  public static void main(String[] args) throws IOException {
+    InputStreamReader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
+    BufferedReader in = new BufferedReader(reader);
+    while ((line = in.readLine()) != null) {
+      length = line.length();
+      // check first brackets
+      if (!brackets()) {
+        System.out.println("invalid");
+        return;
+      }
+      // have booleans for each subsection of the required format
+      // reset the bools if their is multiple entries
+      reset();
+      i = 1;
+      
+      while (i < length-1) { // skip the brackets
+        if (!open_curly) {
+          if (!openCurlyBrace()) {
+            System.out.println("invalid");  
+            return;
+          }
+          open_curly = true;
+        }
+        if (!company_name) {
+          if (!validName()) {
+            System.out.println("invalid");
+            return;
+          } 
+          company_name = true;
+        } 
+        if (!ticker) {
+          if (!validName()) {
+            System.out.println("invalid");
+            return;
+          }
+          ticker = true;
+        }
+        if (!stockPrice) {
+          if (stockPrice()) {
+            System.out.println("invalid");
+            return;
+          }
+          stockPrice = true;
+        }
+        
+        if (!close_curly) {
+          if (!closeCurlyBrace()) {
+            System.out.println("invalid");            
+            return;
+          }
+          open_curly = true;
+        }
+        
+        //another entry
+        if (line.substring(i, i+1) == ",") {
+          reset(); 
+        }
+      }
+      System.out.println("valid");
+      return;
+    }
+  }
+  
+  private static void reset() {
+     open_curly = false;
+     company_name = false;
+     ticker = false;
+     stockPrice = false;
+     close_curly = false;    
+  }
+  
+  private static boolean brackets() {
+    if (line.substring(0, 1) != "[" || line.substring(length-1, length) != "]") {
+        return false;
+    }
+    return true;
+  }
+  
+  private static boolean openCurlyBrace() {
+    if (line.substring(i, i+1) != "{") {
+      return false;
+    } 
+    i++;
+    return true;
+  }
+
+  private static boolean closeCurlyBrace() {
+    if (line.substring(i, i+1) != "}") {
+      return false;
+    } 
+    i++;
+    return true;
+  }
+  
+  private static boolean validName() {
+    // Make sure they are valid letters or underscore
+    // presumably, there must be some number of characters in the name 
+    //this.i < length-1 && 
+    if (line.substring(i, i+14) != "company_name: (") {
+      return false;
+    }
+    i += 14; // maybe 13?
+        
+    boolean count = false;
+    while (Character.isLetter(line.charAt(i++))) {
+      count = true;
+    }
+    if (!count) {
+      return false;
+    }
+    
+    // close curly brace
+    if (line.substring(i, i+1) != ")") {
+      return false;
+    }
+    i++;
+    return true;
+  }
+  
+  private static boolean stockPrice() {
+    if (line.substring(i, i+14) != "stock_price: {") {
+      return false;
+    }
+    i += 14; // maybe 13?
+    
+    int index = i;
+    while (Character.isDigit(line.charAt(index))) {
+      if (!line.substring(i, i+14).matches("\\d{4}-\\{2}-\\{2}: ($")) { //2022-04-03: ($
+        return false;
+      }
+      i += 14; // maybe 13?
+
+      while (Character.isDigit(line.charAt(i++)));
+
+      if (line.substring(i, i+1) != ")") {
+        return false;
+      }
+      ++i;     
+      index = i;
+    }
+           
+    if (line.substring(i, i+1) != "}") {
+      return false;
+    }
+    i++;
+    return true;
+  }
+}
